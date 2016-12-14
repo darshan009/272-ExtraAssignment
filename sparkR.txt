@@ -36,7 +36,7 @@ cat("\f")
 
 
 
-//code in console
+// previous attempt for ggplot2 and plotly
 
 ./sparkR
 
@@ -87,14 +87,25 @@ chart_link = plotly_POST(p, filename="bar/basic")
 
 
 
-//final implementation with plot
+//final full implementation with plot
+austinDataFrame <- read.df("/Users/darshansapaliga/Study/MS/Documents/SJSU/272-Ranjan/Assignments/austinData/inspectionData.csv", "csv", header="true", inferSchema = "true", na.strings="NA")
+
+head(austinDataFrame, 20)
+
+createOrReplaceTempView(austinDataFrame, "austinDataFrame")
+
+install.packages("sqldf")
+library(sqldf)
+
+
+
 lowscore <- sql("select * from austinDataFrame where Score < 90")
 head(lowscore)
 
 violationArea <- sql("select Zip_Code, avg(Score) from austinDataFrame4 where Score < 90 group by Zip_Code")
 plot(head(violationArea1, 50))
 
-violationArea1 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date < '12/01/15' AND Score < 80")
+violationArea1 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date > '12/01/15' AND Score < 80")
 head(violationArea1, 30)
 plot(head(violationArea1, 477))
 
@@ -102,17 +113,11 @@ violationArea2 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspec
 plot(head(violationArea2, 1000))
 
 
-violationArea1 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date > '12/01/15' AND Score < 50")
+violationArea3 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date > '12/01/15' AND Score < 50")
 count(violationArea1)
-plot(head(violationArea1))
+plot(head(violationArea3))
 
 
-
-
-violationArea1 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date < '12/01/15' AND Score < 80")
+violationArea4 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date > '12/01/15' AND Score < 80")
 head(violationArea1, 30)
-
-
-
-
-
+plot(head(violationArea3, 1000))
