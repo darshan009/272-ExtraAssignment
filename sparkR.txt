@@ -1,0 +1,118 @@
+//overall code highlights
+
+
+//code attempt in R studio
+
+data <- read.csv("/Users/darshansapaliga/Downloads/inspectionData.csv")
+
+print(data)
+
+install.packages("sqldf")
+
+sqldf("select * from austinData limit 5")
+
+install.packages("SparkR")
+
+if (nchar(Sys.getenv("SPARK_HOME")) < 1) {
+	Sys.setenv(SPARK_HOME = "/Users/darshansapaliga/Downloads/spark-2.0.2-bin-hadoop2.7")
+}
+
+library(SparkR, lib.loc = c(file.path(Sys.getenv("SPARK_HOME"), "R", "lib")))
+
+sparkR.session(master = "local[*]", sparkConfig = list(spark.driver.memory = "4g", spark.driver.fraction = "400", spark.memory.fraction = 0.8))
+
+sc <- sparkR.init(sparkPackages="com.databricks:spark-csv_2.10:1.2.0")
+
+austinData <- read.df("/Users/darshansapaliga/Study/MS/Documents/SJSU/272-Ranjan/Assignments/austinData/inspectionData.csv", headers = "TRUE")
+
+head(austinData)
+
+austinDataFrame <- as.DataFrame(austinData)
+Error: SPARK, DataFrame: WARN TaskSetManager: Stage 1 contains a task of very large size (5678 KB). The maximum recommended task size is 100 KB.
+
+cat("\f")
+
+
+
+
+
+//code in console
+
+./sparkR
+
+austinDataFrame <- read.df("/Users/darshansapaliga/Study/MS/Documents/SJSU/272-Ranjan/Assignments/austinData/inspectionData.csv", "csv", )
+
+head(austinDataFrame, 20)
+
+createOrReplaceTempView(austinDataFrame, "austinDataFrame")
+
+install.packages("sqldf")
+library(sqldf)
+
+
+
+// previous attempt for ggplot2
+install.packages("ggplot2")
+library(ggplot2)
+
+ggplot(data=lowscore, aes(lowscore$Score)) + geom_histogram()
+Error: ggplot2 doesn't know how to deal with data of class SparkDataFrame
+
+ggplot(data=forPlotData, aes(forPlotData$Score)) + geom_histogram(breaks=seq(20, 50, by =2), col="red", fill="green", alpha =.2)
+
+ggplot(data=forPlotData, aes(x = forPlotData$Restaurant_Name, y=forPlotData$Score)) + geom_histogram()
+
+//converting to csv
+write.df(lowestscore1, path = "lowscore.test", source = "csv", mode = "overwrite", header="true")
+
+//reading from csv
+convertedCsv <- read.csv("/Users/darshansapaliga/Study/MS/Documents/SJSU/272-Ranjan/Assignments/austinData/lowescore.test/lowscore.csv")
+
+ggplot(data=convertedCsv, aes(convertedCsv$Score)) + geom_histogram()
+
+
+//test using plotly package
+install.packages("plotly")
+library(plotly)
+
+//plotly test
+ ‘4.5.6’
+> p <- plot_ly(
+   x = c("giraffes", "orangutans", "monkeys"),
+   y = c(20, 14, 23),
+   name = "SF Zoo",
+   type = "bar"
+ )
+chart_link = plotly_POST(p, filename="bar/basic")
+
+
+
+//final implementation with plot
+lowscore <- sql("select * from austinDataFrame where Score < 90")
+head(lowscore)
+
+violationArea <- sql("select Zip_Code, avg(Score) from austinDataFrame4 where Score < 90 group by Zip_Code")
+plot(head(violationArea1, 50))
+
+violationArea1 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date < '12/01/15' AND Score < 80")
+head(violationArea1, 30)
+plot(head(violationArea1, 477))
+
+violationArea2 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date > '12/01/15' AND Score > 95")
+plot(head(violationArea2, 1000))
+
+
+violationArea1 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date > '12/01/15' AND Score < 50")
+count(violationArea1)
+plot(head(violationArea1))
+
+
+
+
+violationArea1 <- sql("select Zip_Code, Score from austinDataFrame4 where Inspection_Date < '12/01/15' AND Score < 80")
+head(violationArea1, 30)
+
+
+
+
+
